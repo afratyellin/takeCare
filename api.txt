@@ -1,0 +1,63 @@
+API
+------register-----
+POST /api/users/register
+body json:
+Register a Professional
+{
+  "fullname": "Jane Gil",
+ "username": "jane_trainer",
+  "email": "jane@example.com",
+  "password": "securepassword",
+  "phone": "9876543210",
+  "role": "professional",
+  "location": { "type": "Point", "coordinates": [34.781768, 32.085300] }, // [longitude, latitude],
+  "gender": "female"
+  "professions": ["fitness trainer", "yoga"],
+  "services": { "inPerson": true, "viaZoom": true },
+  "description": "Certified trainer specializing in yoga and fitness.",
+  "images": ["image1.jpg", "image2.jpg"],
+  "hourlyRate": 60,
+   "birthDate": "1990-01-22"
+}
+Register a Customer 
+{
+  "fullname": "john doe",
+  "username": "john_doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phone": "1234567890",
+  "role": "customer",
+  "location": { "type": "Point", "coordinates": [35.2137, 31.7683] } // coordinates: [longitude, latitude],
+  "gender": "male",
+   "birthDate": "1990-01-22"
+}
+
+Get all proffiaionsl:
+localhost:2000/api/users/allprofessional
+
+Get Professional by id:
+localhost:2000/api/users/proffessional/:professionalId
+===============================
+-------Review---
+POST /api/reviews
+Body:
+{
+    "professionalId": "professionalObjectId",
+    "rating": 5,
+    "comment": "Excellent service!"
+}
+
+Get Reviews for a Professional:
+GET /api/reviews/:professionalId
+
+Update a Review:
+PUT /api/reviews/:reviewId
+Body:
+{
+    "rating": 4,
+    "comment": "Updated comment"
+}
+
+Delete a Review
+DELETE /api/reviews/:reviewId
+===============================

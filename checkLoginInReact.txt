@@ -1,0 +1,14 @@
+import { checkLogin, getLoggedInUser } from '../utils/authUtils';
+
+למשל:
+  //check user login
+  useEffect(() => {
+    if (!checkLogin()) {
+        navigate('/login');
+        return;
+      }
+  }, [navigate]);
+
+  ואם רוצים לבדוק את התפקיד של היוזר:
+   const user = getLoggedInUser();
+    if (user?.role !== 'admin') לדוגמה 
