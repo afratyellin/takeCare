@@ -18,11 +18,16 @@ import { useLanguage } from "../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../api/axiosConfig";
 
-const pages = ["Home", "About"];
-const settings = ["profile", "Logout"];
+
 export default function Navbar() {
   const { toggleLanguage } = useLanguage();
   const { t } = useTranslation();
+  const pages = [
+    { label: t("Home"), path: "home" },
+    { label: t("About"), path: "about" },
+  ];
+  console.log(pages)
+const settings = [t("profile"), t("Logout")];
   // ---------------------MUI-------------------
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -67,6 +72,7 @@ export default function Navbar() {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {/* Left Section */}
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -96,18 +102,41 @@ export default function Navbar() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+                {pages.map((page, index) => (
                   <MenuItem
-                    key={page}
+                  key={index}
                     onClick={() => {
-                      travelTo(page);
+                      travelTo(page.path);
                     }}
                   >
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center"> {page.label}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
+
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              {pages.map((page, index) => (
+                <Button
+                  key={index}
+                  sx={{
+                    my: 1,
+                    display: "block",
+                    fontFamily: "Open Sans Hebrew",
+                    fontWeight: 400,
+                    color: "black",
+                    marginRight: "10px",
+                    border: "1px solid black",
+                    borderRadius: "20px",
+                    padding: "5px 15px",
+                  }}
+                  onClick={() => travelTo(page.path)}
+                >
+                   {page.label}
+                </Button>
+              ))}
+            </Box>
+
             {/* Center Section */}
             <Box
               sx={{
@@ -115,22 +144,21 @@ export default function Navbar() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                flexDirection: "column",
               }}
             >
-              <Typography variant="h6">TakeCare</Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontFamily: "Zeyada, cursive",
+                  fontWeight: 400,
+                  color: "black",
+                }}
+              >
+                Take care
+              </Typography>
             </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                  onClick={() => travelTo(page)}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title={t("Change Language")}>
                 <IconButton

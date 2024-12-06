@@ -19,6 +19,10 @@
   "Client":"Client",
   "Change Language":"Change Language",
   "register":"Register",
-  "Email": "Email"
+  "Email": "Email",
+  "Home": "Home",
+  "About":"About",
+  "profile": "profile",
+  "favorites": "favorites"
 
 }

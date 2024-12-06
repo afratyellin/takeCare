@@ -3,7 +3,6 @@
   "description": "זו אפליקציה עם תמיכה בשפות שונות.",
   "Login": "כניסה",
   "Connect with yourself and your world of content":"התחבר לעצמך ולעולם התוכן שלך",
-
   "By continuing, you agree to Take Care's User Agreement and Privacy Policy":"בכניסה, אתה מסכים להסכם המשתמש ולמדיניות הפרטיות של 'Take Care'",
   "New to Take Care":"Tare Care חדש ב ",
   "Join now":"הצטרף עכשיו",
@@ -21,6 +20,10 @@
   "Client":"לקוח",
   "Change Language": "שנה שפה",
   "register": "הרשמה",
-  "Email": "מייל"
+  "Email": "מייל",
+  "Home": "בית",
+  "About":"אודות",
+  "profile": "פרופיל",
+  "favorites": "מועדפים"
 
 }

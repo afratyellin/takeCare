@@ -5,6 +5,7 @@ import Login from '../pages/login/Login';
 import Register from '../pages/register/Register';
 import Feed from './feed/Feed';
 import AdminPage from '../pages/Admin';
+import MyAcount from "./test/myAcount";
 
 export default function Main() {
     return (
@@ -16,6 +17,7 @@ export default function Main() {
                 <Route path="/register" element={<Register />}></Route>
                 <Route path="/Feed" element={<Feed />}></Route>
                 <Route path="/admin" element={<AdminPage />}></Route>
+                <Route path="/test" element={<MyAcount />}></Route>
 
             </Routes>
         </div>
