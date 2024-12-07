@@ -12,12 +12,11 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import TranslateIcon from "@mui/icons-material/Translate";
 import { useLanguage } from "../context/LanguageContext";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../api/axiosConfig";
-
+import profileicon from '../images/profileicon.png';
 
 export default function Navbar() {
   const { toggleLanguage } = useLanguage();
@@ -122,7 +121,7 @@ const settings = [t("profile"), t("Logout")];
                   sx={{
                     my: 1,
                     display: "block",
-                    fontFamily: "Open Sans Hebrew",
+                    fontFamily: "Open Sans",
                     fontWeight: 400,
                     color: "black",
                     marginRight: "10px",
@@ -170,7 +169,7 @@ const settings = [t("profile"), t("Logout")];
               </Tooltip>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Uemy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Uemy Sharp" src={profileicon} />
                 </IconButton>
               </Tooltip>
 
