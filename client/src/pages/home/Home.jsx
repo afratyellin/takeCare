@@ -1,10 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { checkLogin } from "../../utils/authUtils";
 import Map from "../home/Map"
-import UserPage from "./UserPage";
+import Filters from "./Filters";
+import Users from "./Users";
 
 
 const Home = () => {
@@ -12,13 +13,30 @@ const Home = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  useEffect(() => {
+    // משיכת נתונים מה-API
+    fetch("http://localhost:2000/api/users/allprofessional")
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data); // שמירת כל היוזרים
+        setFilteredUsers(data); // ברירת המחדל: כל היוזרים
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  }, []);
+
   return (
     
-    <div className="flex">
-    <h1>{t("home Page")}</h1>
-   <UserPage></UserPage>
-   <Map className="Map"></Map>
-   </div>
+    <Box sx={{ display: "flex" }}>
+     
+      <Filters users={users} setFilteredUsers={setFilteredUsers} />
+      <Users filteredUsers={filteredUsers} />
+      <Map></Map>
+    </Box>
   );
 };
 
