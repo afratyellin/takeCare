@@ -1,8 +1,8 @@
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import { Button, Box, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { checkLogin, getLoggedInUser } from "../utils/authUtils";
+import { useNavigate } from "react-router-dom";
+import { checkLogin } from "../../utils/authUtils";
 
 const Home = () => {
   const { t } = useTranslation();
