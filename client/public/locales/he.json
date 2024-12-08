@@ -24,6 +24,12 @@
   "Home": "בית",
   "About":"אודות",
   "profile": "פרופיל",
-  "favorites": "מועדפים"
+  "favorites": "מועדפים",
+  "Filter by": "סינון",
+  "Apply Filters": "החל סינון",
+  "home Page":"דף הבית",
+  "Gender":"איש\\ה" ,
+  "Male":" איש",
+  "Female": "אישה"
 
 }

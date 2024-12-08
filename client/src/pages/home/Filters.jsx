@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Box, Checkbox, FormControl, FormGroup, FormControlLabel, Button, Typography, Slider, TextField } from "@mui/material";
-
+import { useTranslation } from "react-i18next";
 const Filters = ({ users, setFilteredUsers }) => {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState({
     gender: "",
     professions: [],
@@ -76,20 +77,21 @@ const Filters = ({ users, setFilteredUsers }) => {
       }}
     >
       <Typography variant="h6" textAlign={"center"} sx={{ fontWeight: "bold", color: "#333", marginBottom: "16px" }}>
-        Filter by
+        {t("Filter by")}
       </Typography>
 
       {/* Gender filter */}
       <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Gender</Typography>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>{t("Gender")}</Typography>
         <FormGroup>
           <FormControlLabel 
             control={<Checkbox checked={filter.gender === "male"} onChange={handleInputChange} name="gender" value="male" />}
-            label="Male" 
+            label={t("Male")} 
           />
+          
           <FormControlLabel
             control={<Checkbox checked={filter.gender === "female"} onChange={handleInputChange} name="gender" value="female" />}
-            label="Female"
+            label={t("Female")}
           />
         </FormGroup>
       </FormControl>
@@ -100,7 +102,7 @@ const Filters = ({ users, setFilteredUsers }) => {
         <FormGroup>
           <FormControlLabel
             control={<Checkbox checked={filter.professions.includes("fitness trainer")} onChange={handleInputChange} name="professions" value="fitness trainer" />}
-            label="Fitness Trainer"
+            label="Fitness Trainer" 
           />
           <FormControlLabel
             control={<Checkbox checked={filter.professions.includes("yoga")} onChange={handleInputChange} name="professions" value="yoga" />}
@@ -112,15 +114,18 @@ const Filters = ({ users, setFilteredUsers }) => {
       {/* Services filter */}
       <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
         <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Services</Typography>
+        <br></br>
         <FormGroup>
           <FormControlLabel
             control={<Checkbox checked={filter.serviceInPerson} onChange={handleCheckboxChange} name="serviceInPerson" />}
             label="In-Person Service"
           />
+          <br></br>
           <FormControlLabel
             control={<Checkbox checked={filter.serviceZoom} onChange={handleCheckboxChange} name="serviceZoom" />}
             label="Zoom Service"
           />
+          <br></br>
         </FormGroup>
       </FormControl>
 
@@ -148,7 +153,7 @@ const Filters = ({ users, setFilteredUsers }) => {
           value={filter.description}
           onChange={handleInputChange}
           name="description"
-          sx={{ marginBottom: 3 }}
+          sx={{ marginBottom: 3,padding:3 }}
         />
       </FormControl>
 
