@@ -7,7 +7,7 @@ const Map = () => {
   const position = [32.0853, 34.7818]; // קואורדינטות לתל אביב
 
   return (
-    <div style={{ height: "500px", width: "50%" }}>
+    <div style={{ height: "1000px", width: "500Px" }}>
       <MapContainer center={position} zoom={13} style={{ height: "100%", width: "100%" }}>
         {/* הוספת TileLayer של OpenStreetMap */}
         <TileLayer

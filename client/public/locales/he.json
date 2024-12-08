@@ -26,10 +26,20 @@
   "profile": "פרופיל",
   "favorites": "מועדפים",
   "Filter by": "סינון",
-  "Apply Filters": "החל סינון",
   "home Page":"דף הבית",
-  "Gender":"איש\\ה" ,
-  "Male":" איש",
-  "Female": "אישה"
+  "Filter Users": "סינון משתמשים",
+  "Gender": "מגדר",
+  "Male": "גבר",
+  "Female": "אישה",
+  "Professions": "מקצועות",
+  "fitness trainer": "מאמן כושר",
+  "yoga": "מדריך יוגה",
+  "nutritionist": "תזונאי/ת",
+  "Services": "שירותים",
+  "In-Person": "פגישה פרונטלית",
+  "Via Zoom": "דרך זום",
+  "Hourly Rate": "תעריף שעתי",
+  "Search by description": "חפש לפי תיאור",
+  "Apply Filters": "החל סינון"
 
 }

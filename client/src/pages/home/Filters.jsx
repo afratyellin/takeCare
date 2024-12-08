@@ -1,6 +1,17 @@
 import React, { useState } from "react";
-import { Box, Checkbox, FormControl, FormGroup, FormControlLabel, Button, Typography, Slider, TextField } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Button,
+  Typography,
+  Slider,
+  TextField,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
+
 const Filters = ({ users, setFilteredUsers }) => {
   const { t } = useTranslation();
   const [filter, setFilter] = useState({
@@ -8,13 +19,21 @@ const Filters = ({ users, setFilteredUsers }) => {
     professions: [],
     serviceInPerson: false,
     serviceZoom: false,
-    hourlyRate: [0, 100], // טווח מחירים ברירת מחדל
-    description: ""
+    hourlyRate: [0, 100],
+    description: "",
   });
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFilter({ ...filter, [name]: checked });
+  };
+
+  const handleProfessionsChange = (e) => {
+    const { value, checked } = e.target;
+    const updatedProfessions = checked
+      ? [...filter.professions, value]
+      : filter.professions.filter((prof) => prof !== value);
+    setFilter({ ...filter, professions: updatedProfessions });
   };
 
   const handleInputChange = (e) => {
@@ -29,33 +48,39 @@ const Filters = ({ users, setFilteredUsers }) => {
   const applyFilters = () => {
     let filtered = [...users];
 
-    // פילטר מגדר
+    // Filter by gender
     if (filter.gender) {
-      filtered = filtered.filter(user => user.gender === filter.gender);
+      filtered = filtered.filter((user) => user.gender === filter.gender);
     }
 
-    // פילטר מקצועות
+    // Filter by professions
     if (filter.professions.length > 0) {
-      filtered = filtered.filter(user => filter.professions.some(prof => user.professions.includes(prof)));
+      filtered = filtered.filter((user) =>
+        filter.professions.some((prof) => user.professions.includes(prof))
+      );
     }
 
-    // פילטר שירותים
+    // Filter by services
     if (filter.serviceInPerson) {
-      filtered = filtered.filter(user => user.services.inPerson === true);
+      filtered = filtered.filter((user) => user.services.inPerson);
     }
 
     if (filter.serviceZoom) {
-      filtered = filtered.filter(user => user.services.viaZoom === true);
+      filtered = filtered.filter((user) => user.services.viaZoom);
     }
 
-    // פילטר לפי טווח מחירים
-    if (filter.hourlyRate.length === 2) {
-      filtered = filtered.filter(user => user.hourlyRate >= filter.hourlyRate[0] && user.hourlyRate <= filter.hourlyRate[1]);
-    }
+    // Filter by hourly rate
+    filtered = filtered.filter(
+      (user) =>
+        user.hourlyRate >= filter.hourlyRate[0] &&
+        user.hourlyRate <= filter.hourlyRate[1]
+    );
 
-    // פילטר לפי תיאור
+    // Filter by description
     if (filter.description) {
-      filtered = filtered.filter(user => user.description.toLowerCase().includes(filter.description.toLowerCase()));
+      filtered = filtered.filter((user) =>
+        user.description.toLowerCase().includes(filter.description.toLowerCase())
+      );
     }
 
     setFilteredUsers(filtered);
@@ -66,114 +91,154 @@ const Filters = ({ users, setFilteredUsers }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: 3,
-        padding: "24px",
-        backgroundColor: "#f5f5f5", // צבע רקע בהיר יותר
-        borderRadius: "12px", // פינות מעוגלות יותר
-        boxShadow: 4, // צל עדין
+        gap: 2,
+        padding: "20px",
+        backgroundColor: "#f9f9f9",
+        borderRadius: "12px",
+        boxShadow: 3,
         width: "100%",
-        maxWidth: "420px",
-        margin: "auto"
+        maxWidth: "450px",
+       
       }}
     >
-      <Typography variant="h6" textAlign={"center"} sx={{ fontWeight: "bold", color: "#333", marginBottom: "16px" }}>
-        {t("Filter by")}
+      <Typography
+        variant="h5"
+        textAlign="center"
+        sx={{ fontWeight: "bold", color: "#444", marginBottom: "16px" }}
+      >
+        {t("Filter Users")}
       </Typography>
 
-      {/* Gender filter */}
-      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>{t("Gender")}</Typography>
+     
+
+      {/* Profession filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("Professions")}
+        </Typography>
         <FormGroup>
-          <FormControlLabel 
-            control={<Checkbox checked={filter.gender === "male"} onChange={handleInputChange} name="gender" value="male" />}
-            label={t("Male")} 
-          />
-          
+          {["fitness trainer", "yoga", "nutritionist"].map((profession) => (
+            <FormControlLabel
+              key={profession}
+              control={
+                <Checkbox
+                  checked={filter.professions.includes(profession)}
+                  onChange={handleProfessionsChange}
+                  value={profession}
+                />
+              }
+              label={t(profession)}
+            />
+          ))}
+        </FormGroup>
+      </FormControl>
+       {/* Gender filter */}
+       <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold", textAlign: "center" }}>
+          {t("Gender")}
+        </Typography>
+        <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={filter.gender === "female"} onChange={handleInputChange} name="gender" value="female" />}
+            control={
+              <Checkbox
+                checked={filter.gender === "male"}
+                onChange={(e) =>
+                  setFilter({ ...filter, gender: e.target.checked ? "male" : "" })
+                }
+                name="gender"
+              />
+            }
+            label={t("Male")}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={filter.gender === "female"}
+                onChange={(e) =>
+                  setFilter({
+                    ...filter,
+                    gender: e.target.checked ? "female" : "",
+                  })
+                }
+                name="gender"
+              />
+            }
             label={t("Female")}
           />
         </FormGroup>
       </FormControl>
 
-      {/* Profession filter */}
-      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Profession</Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={filter.professions.includes("fitness trainer")} onChange={handleInputChange} name="professions" value="fitness trainer" />}
-            label="Fitness Trainer" 
-          />
-          <FormControlLabel
-            control={<Checkbox checked={filter.professions.includes("yoga")} onChange={handleInputChange} name="professions" value="yoga" />}
-            label="Yoga Trainer"
-          />
-        </FormGroup>
-      </FormControl>
-
       {/* Services filter */}
-      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Services</Typography>
-        <br></br>
+      <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("Services")}
+        </Typography>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={filter.serviceInPerson} onChange={handleCheckboxChange} name="serviceInPerson" />}
-            label="In-Person Service"
+            control={
+              <Checkbox
+                checked={filter.serviceInPerson}
+                onChange={handleCheckboxChange}
+                name="serviceInPerson"
+              />
+            }
+            label={t("In-Person")}
           />
-          <br></br>
           <FormControlLabel
-            control={<Checkbox checked={filter.serviceZoom} onChange={handleCheckboxChange} name="serviceZoom" />}
-            label="Zoom Service"
+            control={
+              <Checkbox
+                checked={filter.serviceZoom}
+                onChange={handleCheckboxChange}
+                name="serviceZoom"
+              />
+            }
+            label={t("Via Zoom")}
           />
-          <br></br>
         </FormGroup>
       </FormControl>
 
       {/* Hourly Rate filter */}
-      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Hourly Rate</Typography>
+      <FormControl sx={{ marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("Hourly Rate")}
+        </Typography>
         <Slider
           value={filter.hourlyRate}
           onChange={handleSliderChange}
           valueLabelDisplay="auto"
-          valueLabelFormat={(value) => `${value} $`}
+          valueLabelFormat={(value) => `${value}$`}
           min={0}
           max={200}
-          sx={{ marginBottom: 3 }}
+          step={10}
         />
       </FormControl>
 
       {/* Description filter */}
-      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
-        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Description</Typography>
+      <FormControl sx={{ marginBottom: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          {t("Description")}
+        </Typography>
         <TextField
-          fullWidth
-          label="Search in Description"
+          placeholder={t("Search by description")}
           variant="outlined"
           value={filter.description}
           onChange={handleInputChange}
           name="description"
-          sx={{ marginBottom: 3,padding:3 }}
         />
       </FormControl>
+      
 
-      {/* Apply Filters Button */}
       <Button
         variant="contained"
         color="primary"
         onClick={applyFilters}
         sx={{
-          backgroundColor: "#3f51b5", // צבע רקע כפתור
-          "&:hover": {
-            backgroundColor: "#303f9f", // צבע בעת ריחוף
-          },
           padding: "12px",
-          fontSize: "1rem",
           fontWeight: "bold",
-          borderRadius: "8px", // פינות מעוגלות לכפתור
+          fontSize: "1rem",
         }}
       >
-        Apply Filters
+        {t("Apply Filters")}
       </Button>
     </Box>
   );
