@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { checkLogin } from "../../utils/authUtils";
 import Map from "../home/Map"
-import Users from "../home/Users"
-import Filters from "../home/Filters"
+import UserPage from "./UserPage";
 const Home = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ const Home = () => {
   return (
     <div className="flex">
 
-   <Filters></Filters>
+   <UserPage></UserPage>
    <Map className="Map"></Map>
    </div>
   );

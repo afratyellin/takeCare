@@ -1,111 +1,175 @@
-import React, { useState, useEffect } from "react";
-import { Checkbox, FormControl, FormControlLabel, InputLabel, Select, MenuItem, Button, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import Users from "./Users"; // ייבוא קומפוננטת Users
+import React, { useState } from "react";
+import { Box, Checkbox, FormControl, FormGroup, FormControlLabel, Button, Typography, Slider, TextField } from "@mui/material";
 
-const Filters = () => {
-  const [users, setUsers] = useState([]); // שמירה על כל המשתמשים
-  const [filteredUsers, setFilteredUsers] = useState([]); // שמירה על המשתמשים המסוננים
-  const [loading, setLoading] = useState(true); // מצב טעינה
-  const [error, setError] = useState(""); // מצב שגיאה
+const Filters = ({ users, setFilteredUsers }) => {
+  const [filter, setFilter] = useState({
+    gender: "",
+    professions: [],
+    serviceInPerson: false,
+    serviceZoom: false,
+    hourlyRate: [0, 100], // טווח מחירים ברירת מחדל
+    description: ""
+  });
 
-  const [selectedProfessions, setSelectedProfessions] = useState([]);
-  const [maxHourlyRate, setMaxHourlyRate] = useState(100); // לדוגמה, גובה מחיר מקסימלי
-  const [gender, setGender] = useState("");
-  const [inPerson, setInPerson] = useState(false);
-  const [viaZoom, setViaZoom] = useState(false);
-
-  // טעינת הנתונים מה-API
-  useEffect(() => {
-    fetch("http://localhost:2000/api/users/allprofessional")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data); // שמירה על כל המשתמשים
-        setFilteredUsers(data); // שמירה על המשתמשים המסוננים (בהתחלה כל הנתונים)
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching users:", err);
-        setError("Failed to load users");
-        setLoading(false);
-      });
-  }, []);
-
-  // פונקציה שמבצעת את הסינון
-  const applyFilters = () => {
-    if (users && users.length > 0) {
-      const filtered = users.filter((user) => {
-        const matchesProfessions =
-          selectedProfessions.length === 0 ||
-          selectedProfessions.every((profession) => user.professions.includes(profession));
-
-        const matchesHourlyRate = user.hourlyRate <= maxHourlyRate;
-        const matchesGender = !gender || user.gender === gender;
-        const matchesInPerson = !inPerson || user.services.inPerson;
-        const matchesViaZoom = !viaZoom || user.services.viaZoom;
-
-        return matchesProfessions && matchesHourlyRate && matchesGender && (matchesInPerson || matchesViaZoom);
-      });
-
-      setFilteredUsers(filtered); // עדכון המשתמשים המסוננים
-    }
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFilter({ ...filter, [name]: checked });
   };
 
-  // אם יש טעינה או שגיאה
-  if (loading) return <Typography>Loading users...</Typography>;
-  if (error) return <Typography color="error">{error}</Typography>;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilter({ ...filter, [name]: value });
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setFilter({ ...filter, hourlyRate: newValue });
+  };
+
+  const applyFilters = () => {
+    let filtered = [...users];
+
+    // פילטר מגדר
+    if (filter.gender) {
+      filtered = filtered.filter(user => user.gender === filter.gender);
+    }
+
+    // פילטר מקצועות
+    if (filter.professions.length > 0) {
+      filtered = filtered.filter(user => filter.professions.some(prof => user.professions.includes(prof)));
+    }
+
+    // פילטר שירותים
+    if (filter.serviceInPerson) {
+      filtered = filtered.filter(user => user.services.inPerson === true);
+    }
+
+    if (filter.serviceZoom) {
+      filtered = filtered.filter(user => user.services.viaZoom === true);
+    }
+
+    // פילטר לפי טווח מחירים
+    if (filter.hourlyRate.length === 2) {
+      filtered = filtered.filter(user => user.hourlyRate >= filter.hourlyRate[0] && user.hourlyRate <= filter.hourlyRate[1]);
+    }
+
+    // פילטר לפי תיאור
+    if (filter.description) {
+      filtered = filtered.filter(user => user.description.toLowerCase().includes(filter.description.toLowerCase()));
+    }
+
+    setFilteredUsers(filtered);
+  };
 
   return (
-    <Box className="flex">
-      <div className="flex1" >
-      <FormControl fullWidth>
-        <InputLabel>Professions</InputLabel>
-        <Select
-          multiple
-          value={selectedProfessions}
-          onChange={(e) => setSelectedProfessions(e.target.value)}
-          label="Professions"
-        >
-          <MenuItem value="fitness trainer">Fitness Trainer</MenuItem>
-          <MenuItem value="yoga">Yoga</MenuItem>
-          <MenuItem value="NLP">NLP</MenuItem>
-          {/* הוסף מקצועות נוספים */}
-        </Select>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        padding: "24px",
+        backgroundColor: "#f5f5f5", // צבע רקע בהיר יותר
+        borderRadius: "12px", // פינות מעוגלות יותר
+        boxShadow: 4, // צל עדין
+        width: "100%",
+        maxWidth: "420px",
+        margin: "auto"
+      }}
+    >
+      <Typography variant="h6" textAlign={"center"} sx={{ fontWeight: "bold", color: "#333", marginBottom: "16px" }}>
+        Filter by
+      </Typography>
+
+      {/* Gender filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Gender</Typography>
+        <FormGroup>
+          <FormControlLabel 
+            control={<Checkbox checked={filter.gender === "male"} onChange={handleInputChange} name="gender" value="male" />}
+            label="Male" 
+          />
+          <FormControlLabel
+            control={<Checkbox checked={filter.gender === "female"} onChange={handleInputChange} name="gender" value="female" />}
+            label="Female"
+          />
+        </FormGroup>
       </FormControl>
 
-      <TextField
-        label="Max Hourly Rate"
-        type="number"
-        value={maxHourlyRate}
-        onChange={(e) => setMaxHourlyRate(e.target.value)}
-        fullWidth
-      />
-
-      <FormControl fullWidth>
-        <InputLabel>Gender</InputLabel>
-        <Select value={gender} onChange={(e) => setGender(e.target.value)} label="Gender">
-          <MenuItem value="">Any</MenuItem>
-          <MenuItem value="male">Male</MenuItem>
-          <MenuItem value="female">Female</MenuItem>
-        </Select>
+      {/* Profession filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Profession</Typography>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={filter.professions.includes("fitness trainer")} onChange={handleInputChange} name="professions" value="fitness trainer" />}
+            label="Fitness Trainer"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={filter.professions.includes("yoga")} onChange={handleInputChange} name="professions" value="yoga" />}
+            label="Yoga Trainer"
+          />
+        </FormGroup>
       </FormControl>
 
-      <FormControlLabel
-        control={<Checkbox checked={inPerson} onChange={() => setInPerson(!inPerson)} />}
-        label="In Person"
-      />
-      <FormControlLabel
-        control={<Checkbox checked={viaZoom} onChange={() => setViaZoom(!viaZoom)} />}
-        label="Via Zoom"
-      />
+      {/* Services filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Services</Typography>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={filter.serviceInPerson} onChange={handleCheckboxChange} name="serviceInPerson" />}
+            label="In-Person Service"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={filter.serviceZoom} onChange={handleCheckboxChange} name="serviceZoom" />}
+            label="Zoom Service"
+          />
+        </FormGroup>
+      </FormControl>
 
-      <Button variant="contained" color="primary" onClick={applyFilters}>
+      {/* Hourly Rate filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Hourly Rate</Typography>
+        <Slider
+          value={filter.hourlyRate}
+          onChange={handleSliderChange}
+          valueLabelDisplay="auto"
+          valueLabelFormat={(value) => `${value} $`}
+          min={0}
+          max={200}
+          sx={{ marginBottom: 3 }}
+        />
+      </FormControl>
+
+      {/* Description filter */}
+      <FormControl component="fieldset" sx={{ marginBottom: 3 }}>
+        <Typography variant="body1" sx={{ marginBottom: 1, fontWeight: 'bold' }}>Description</Typography>
+        <TextField
+          fullWidth
+          label="Search in Description"
+          variant="outlined"
+          value={filter.description}
+          onChange={handleInputChange}
+          name="description"
+          sx={{ marginBottom: 3 }}
+        />
+      </FormControl>
+
+      {/* Apply Filters Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={applyFilters}
+        sx={{
+          backgroundColor: "#3f51b5", // צבע רקע כפתור
+          "&:hover": {
+            backgroundColor: "#303f9f", // צבע בעת ריחוף
+          },
+          padding: "12px",
+          fontSize: "1rem",
+          fontWeight: "bold",
+          borderRadius: "8px", // פינות מעוגלות לכפתור
+        }}
+      >
         Apply Filters
       </Button>
-      </div>
-
-      {/* הצגת המשתמשים המסוננים */}
-      <Users filteredUsers={filteredUsers} />
     </Box>
   );
 };

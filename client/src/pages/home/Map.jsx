@@ -32,7 +32,7 @@ const Map = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex1">
       <h1>Map</h1>
       <div
         ref={mapRef}

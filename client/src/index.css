@@ -41,10 +41,11 @@ span {
 /*# sourceMappingURL=index.css.map */
 .flex{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .flex1{
   display: flex;
   flex-direction: column;
   padding: auto;
+  width: 30%;
 }
